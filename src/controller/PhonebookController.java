@@ -11,6 +11,7 @@ import storage.FileStorage;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class PhonebookController implements IController {
     @Override
@@ -32,9 +33,9 @@ public class PhonebookController implements IController {
             }
             case "generate" -> {
                 var mapper = new PersonMapper();
-                for (int i = 0; i < 150; i++) {
-                    dao.save(mapper.toEntity2(arguments));
-                }
+                IntStream.range(0, 150)
+                        .mapToObj(i -> mapper.toEntity2(arguments))
+                        .forEach(dao::save);
             }
             case "save" -> {
                 var mapper = new PersonMapper();

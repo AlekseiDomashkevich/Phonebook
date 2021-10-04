@@ -6,11 +6,10 @@ import entity.Person;
 import storage.Storage;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class PhonebookDAO {
     private final List<Storage<Person>> storages;
@@ -20,13 +19,11 @@ public class PhonebookDAO {
     }
 
     public List<Person> findBy(Predicate<Person> predicate) {
-        List<Person> result = new ArrayList<>();
+        List<Person> result;
         var personList = this.findAll();
-        personList.forEach(person -> {
-            if (predicate.test(person)) {
-                result.add(person);
-            }
-        });
+        result = personList.stream()
+                .filter(predicate::test)
+                .collect(Collectors.toList());
         return result;
     }
 
@@ -34,11 +31,10 @@ public class PhonebookDAO {
     private void saveAll(Person[] people) {
         this.deleteFile();
 
-        for (int i = 0; i < people.length; i++) {
-            if (people[i] != null) {
-                this.save(people[i]);
-            }
-        }
+        IntStream.range(0, people.length)
+                .filter(i -> people[i] != null)
+                .mapToObj(i -> people[i])
+                .forEach(this::save);
     }
 
     private void deleteFile() {
@@ -99,38 +95,33 @@ public class PhonebookDAO {
     public Person find(Integer id) {
         var storage = this.storages.get(0);
         var people = storage.findAll();
-        for (int i = 0; i < people.size(); i++) {
-            if (people.get(i).getId().equals(id)) {
-                return people.get(i);
-            }
-        }
-
-        return null;
+        return people.stream()
+                .filter(person -> person.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
     public void delete(int id) {
         Person[] people = this.storages.get(0).findAll().toArray(new Person[0]);
-        for (int i = 0; i < people.length; i++) {
-            if (people[i].getId().equals(id)) {
-                people[i] = null;
-            }
-        }
+        IntStream.range(0, people.length)
+                .filter(i -> people[i].getId().equals(id))
+                .forEach(i -> people[i] = null);
         this.saveAll(people);
     }
 
     public void save(Person person) {
-        for (int i = 0; i < this.storages.size(); i++) {
-            this.storages.get(i).save(person);
-        }
+        this.storages.forEach(storage -> storage.save(person));
     }
 
     public void saveIndex(){
 
         var personList = this.findAll();
-        var map = new HashMap<Integer, String>();
-        for(Person person : personList){
-            map.put(person.getId(), person.getLastname());
-        }
+        var map = personList.stream()
+                .collect(Collectors.toMap(
+                        Person::getId,
+                        Person::getLastname,
+                        (a, b) -> b, HashMap::new)
+                );
         ObjectOutputStream ous = null;
         try {
             ous = new ObjectOutputStream(new FileOutputStream("./Index.txt", true));
