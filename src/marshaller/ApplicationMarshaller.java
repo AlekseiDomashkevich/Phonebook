@@ -3,11 +3,10 @@ package marshaller;
 
 
 import entity.Application;
+import entity.Person;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.List;
 
 public class ApplicationMarshaller implements Marshaller {
     private OutputStream fout;
@@ -39,6 +38,16 @@ public class ApplicationMarshaller implements Marshaller {
 
     @Override
     public void appendProcess(Object entity) throws IOException {
+
+    }
+
+    @Override
+    public List<Person> toJavaObject(File file) throws IOException {
+        return null;
+    }
+
+    @Override
+    public void toJSON(List<Person> person, File file) throws IOException {
 
     }
 }

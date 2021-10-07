@@ -15,8 +15,9 @@ import java.util.stream.IntStream;
 
 public class PhonebookController implements IController {
     @Override
-    public void process(List<String> arguments) {
-        var storage = new FileStorage<Person>("./phonebook.txt");
+    public Object process(List<String> arguments) {
+        //var storage = new FileStorage<Person>("./phonebook.txt");
+        var storage = new FileStorage<Person>("./phonebook.json");
         storage.setMarshaller(new PersonMarshaller());
         storage.setEntityClass(Person.class);
 
@@ -36,6 +37,7 @@ public class PhonebookController implements IController {
                 IntStream.range(0, 150)
                         .mapToObj(i -> mapper.toEntity2(arguments))
                         .forEach(dao::save);
+                System.out.println("json created");
             }
             case "save" -> {
                 var mapper = new PersonMapper();
@@ -71,5 +73,6 @@ public class PhonebookController implements IController {
                 personList.forEach(System.out::println);
             }
         }
+        return true;
     }
 }

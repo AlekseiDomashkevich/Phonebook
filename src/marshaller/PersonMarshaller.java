@@ -2,15 +2,16 @@ package marshaller;
 
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import entity.Person;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.List;
 
 public class PersonMarshaller implements Marshaller {
     private FileOutputStream fout;
+    ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public void appendProcess(Object entity) throws IOException {
@@ -19,6 +20,17 @@ public class PersonMarshaller implements Marshaller {
         ois.writeObject(person);
         ois.flush();
 
+    }
+
+    @Override
+    public List<Person> toJavaObject(File file) throws IOException {
+        return mapper.readValue(file, new TypeReference<List<Person>>(){});
+    }
+
+    @Override
+    public void toJSON(List<Person> person, File file) throws IOException {
+        mapper.writerWithDefaultPrettyPrinter();
+        mapper.writeValue(file, person);
     }
 
     @Override

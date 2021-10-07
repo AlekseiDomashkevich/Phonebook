@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ApplicationController implements IController {
     @Override
-    public void process(List<String> arguments) {
+    public Object process(List<String> arguments) {
         var storage = new FileStorage<Application>("./applications.txt");
         storage.setEntityClass(Application.class);
         storage.setMarshaller(new ApplicationMarshaller());
@@ -67,5 +67,6 @@ public class ApplicationController implements IController {
             }
             case "done" -> {}
         }
+        return true;
     }
 }

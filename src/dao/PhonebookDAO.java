@@ -1,7 +1,5 @@
 package dao;
 
-
-
 import entity.Person;
 import storage.Storage;
 
@@ -38,7 +36,7 @@ public class PhonebookDAO {
     }
 
     private void deleteFile() {
-        new File("./phonebook.txt").delete();
+        new File("./user1.EXAMPLE.json").delete();
     }
 
     public Person findByLastname(String lastname) {

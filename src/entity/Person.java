@@ -1,13 +1,22 @@
 package entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 
 public class Person implements Entity, Serializable {
+    @JsonProperty("ID")
     private Integer id;
+    @JsonProperty("FirstName")
     private String firstname;
+    @JsonProperty("LastName")
     private String lastname;
+    @JsonProperty("Adress")
     private String address;
+    @JsonProperty("Age")
     private Integer age;
+    @JsonProperty("PhoneNumber")
     private String phoneNumber;
 
     public Person() {

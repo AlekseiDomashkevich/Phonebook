@@ -1,11 +1,21 @@
 package storage;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import entity.Person;
 import marshaller.Marshaller;
 
-import java.io.*;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 
 public interface Storage<E> {
 
@@ -20,16 +30,12 @@ public interface Storage<E> {
     void save(Object person);
 
     default List<E> findAll() {
-        var entities = new LinkedList<E>();
-        try (var ois = new ObjectInputStream(new FileInputStream("./phonebook.txt"))) {
-            E p;
+        var entities = new ArrayList<E>();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            entities = (ArrayList<E>) mapper.readValue(new File("./phonebook.json"), new TypeReference<List<Person>>() {});
 
-            while ((p = (E) ois.readObject()) != null) {
-                entities.add(p);
-
-            }
-        } catch (EOFException ignored) {
-        } catch (ClassNotFoundException | IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
