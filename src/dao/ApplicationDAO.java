@@ -22,7 +22,7 @@ public class ApplicationDAO {
         try {
             var applications = new ArrayList<Application>();
             var stmt = this.connection.createStatement();
-            var rs = stmt.executeQuery("SELECT * FROM Application");
+            var rs = stmt.executeQuery("SELECT * FROM phonebook.application");
             while (rs.next()) {
                 var application = new Application();
                 application.setId(rs.getInt("id"));
@@ -44,7 +44,7 @@ public class ApplicationDAO {
         try {
             if (application.getId() != null) {
                 var stmt = this.connection.prepareStatement(
-                        "UPDATE Application SET age = ?, firstname = ?, lastname = ?, address = ?, status = ? WHERE id = ?"
+                        "UPDATE phonebook.application SET age = ?, firstname = ?, lastname = ?, address = ?, status = ? WHERE id = ?"
                 );
                 stmt.setInt(1, application.getAge());
                 stmt.setString(2, application.getFirstname());
@@ -55,7 +55,7 @@ public class ApplicationDAO {
                 stmt.execute();
             } else {
                 var stmt = this.connection.prepareStatement(
-                        "INSERT INTO Application (age, firstname, lastname, address, status) VALUES (?, ?, ?, ?, ?)"
+                        "INSERT INTO phonebook.application (age, firstname, lastname, address, status) VALUES (?, ?, ?, ?, ?)"
                 );
                 stmt.setInt(1, application.getAge());
                 stmt.setString(2, application.getFirstname());
