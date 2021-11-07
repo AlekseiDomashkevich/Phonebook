@@ -1,6 +1,4 @@
-import webServer.SaveHandler;
-import webServer.IndexHandler;
-import webServer.PhonebookHandler;
+import webServer.*;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
@@ -11,6 +9,8 @@ public class WebApplication {
         HttpServer server = null;
         try {
             server = HttpServer.create(new InetSocketAddress(8000), 0);
+            server.createContext("/style", new StyleHandler());
+            server.createContext("/application", new ApplicationHandler());
             server.createContext("/phonebook", new PhonebookHandler());
             server.createContext("/save" , new SaveHandler());
             server.createContext("/", new IndexHandler());

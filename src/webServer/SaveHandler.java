@@ -37,7 +37,6 @@ public class SaveHandler implements HttpHandler {
         Connection connection = getConnection(properties);
 
         var dao = new PhonebookDAO(connection);
-        var mapper = new PersonMapper();
         args.add(0, "");
         args.forEach(System.out::println);
         var person = new Person();
